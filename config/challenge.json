@@ -1,6 +1,6 @@
 {
   "cohort": "K4",
-  "challenge_id": "day13-k4-l3a-observability-v1",
+  "challenge_id": "day13-k4-l3a-monitoring-llmops-v1",
   "incident": "rag_slow",
   "seed": 1311,
   "affected_feature": "monitoring",
