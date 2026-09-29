@@ -11,7 +11,7 @@ Bạn sẽ biến một AI API “hộp đen” thành hệ thống có thể tr
 2. Logs giúp tìm request cụ thể qua `correlation_id`.
 3. Trace của request đó cho biết span nào chậm hoặc lỗi.
 
-Repo dùng fake LLM nên không cần API key mô hình trả phí. Langfuse dùng để quan sát trace và quản lý prompt version.
+Repo dùng fake LLM nên không cần API key mô hình trả phí. Mỗi học viên tự tạo một project Langfuse riêng để quan sát trace và quản lý prompt version; không dùng project/key dùng chung.
 
 ## Kết quả cần đạt
 
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Điền project Langfuse do Lab Coach cung cấp vào `.env`:
+Tự đăng ký/đăng nhập [Langfuse Cloud](https://cloud.langfuse.com), tạo project riêng tên `day13-k4-l3a-<MSSV>`, rồi vào **Project Settings → API Keys** để tạo key pair. Điền key của chính project đó vào `.env`:
 
 ```dotenv
 LANGFUSE_PUBLIC_KEY=pk-lf-...
@@ -63,6 +63,10 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 LANGFUSE_PROMPT_NAME=day13-chat
 LANGFUSE_PROMPT_LABEL=production
 ```
+
+Không chia sẻ key và không chụp màn hình trang hiển thị secret. Xem các bước chi tiết tại [docs/SETUP.md](docs/SETUP.md).
+
+> **Phân biệt evidence:** structured logs nằm ở terminal/`data/logs.jsonl`; Langfuse hiển thị traces/observations và prompt versions. Học viên phải tự chạy workload, tự tạo cả log lẫn trace rồi chụp evidence của mình.
 
 Chạy API ở terminal thứ nhất:
 
@@ -131,7 +135,7 @@ Dashboard dùng `data/logs.jsonl` làm nguồn chuẩn và giữ đúng 6 panel 
 
 ### CP3 — Challenge chính thức
 
-Chỉ chạy khi Lab Coach thông báo mở challenge của K4-L3A:
+Chỉ chạy khi Lab Coach thông báo mở challenge của K4-L3A. Tại CP3, Lab Coach gửi riêng file đúng lớp; lưu file đó tại `config/challenge.json`. File này đã được `.gitignore` và **không được** force-add/commit/push:
 
 ```bash
 python scripts/inject_incident.py
@@ -145,7 +149,7 @@ python scripts/load_test.py --challenge --concurrency 5
 3. Tìm trace có cùng `correlation_id`, rồi so sánh các span.
 4. Ghi root cause, fix action và preventive measure vào `submission/REPORT.md`.
 
-Không sửa, thay thế hoặc lấy `config/challenge.json` từ lớp khác.
+Không tự tạo, sửa, chia sẻ hoặc lấy `config/challenge.json` từ lớp khác. Nếu chưa nhận file riêng, tiếp tục practice bằng tham số `--scenario`; không chạy challenge chính thức.
 
 ## Kiểm tra trước khi nộp
 

@@ -16,14 +16,16 @@
 ## 3 Hợp tác và liêm chính
 
 - Được thảo luận khái niệm với học viên khác nhưng phải tự triển khai bài của mình.
+- Mỗi học viên phải tự tạo project Langfuse và tự sinh trace/prompt evidence; không dùng project hoặc API key dùng chung.
 - Không sao chép source, report, dashboard, screenshot, trace ID hoặc evidence.
 - `submission/REPORT.md` phải do chính học viên viết và khớp source, evidence cùng lịch sử Git.
 - Không xóa log lỗi hoặc chỉnh ảnh để che kết quả không đạt.
 
 ## 4 Challenge chính thức
 
-- Chỉ chạy challenge sau khi Lab Coach release file cho đúng lớp.
-- Không tự tạo, sửa, thay thế hoặc cherry-pick `config/challenge.json` từ repo lớp khác.
+- Chỉ chạy challenge sau khi Lab Coach gửi riêng file cho đúng lớp tại CP3.
+- `config/challenge.json` đã được `.gitignore`: không force-add, commit, push hoặc chia sẻ file qua repository/kênh chung.
+- Không tự tạo, sửa, thay thế hoặc lấy `config/challenge.json` từ học viên/lớp khác.
 - Evidence phải ghi challenge ID và khớp query/seed của repo đã nộp.
 - Practice scenarios được phép chạy bất kỳ lúc nào.
 
@@ -33,6 +35,7 @@
 - Không ghi PII nguyên văn vào source, log, screenshot hoặc report.
 - Dùng dữ liệu thử nghiệm do repo cung cấp; không nhập PII thật.
 - Nếu phát hiện key đã commit, phải revoke/rotate ngay và báo cho Lab Coach.
+- Screenshot Langfuse được phép hiển thị tên project cá nhân nhưng không được hiển thị public/secret key.
 
 ## 6 Evidence trung thực
 
