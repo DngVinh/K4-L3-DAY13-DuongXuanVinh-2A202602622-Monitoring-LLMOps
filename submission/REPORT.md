@@ -8,9 +8,8 @@
 - **MSSV:** 2A202602622
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
-- **Commit chứa source/evidence đã kiểm định:** `59dc4ada085cda083d7c528f0655766a02d1e991`.
-- **Commit đã push gần nhất trước khi chốt báo cáo:** `8abb34bb744e9f1efb0afd1104d1962bd6a17344`.
-- **Commit SHA cuối để nộp LMS:** sau khi push commit REPORT cuối, chạy `git rev-parse HEAD` và nộp đúng SHA đó; không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`.
+- **Commit chứa source/evidence đã kiểm định trước lần chốt report này:** `e22a54bdebc3905210e000ae0b2d51730a6da073` (đang có trên `origin/main`).
+- **Commit SHA cuối để nộp LMS:** lấy bằng `git rev-parse HEAD` sau commit cuối và chỉ nộp SHA đã tồn tại trên remote; SHA này có thể khác commit source/evidence ở dòng trên nếu report được cập nhật thêm.
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file CP3 đúng ID/seed, không sửa nội dung)
 
 ## 2. Evidence index
@@ -40,16 +39,18 @@
 
 | Nội dung | Baseline | Kết quả cuối | Nhận xét |
 |---|---|---|---|
-| `validate_logs.py` | 30/100 | 100/100 | Baseline 21 records; sau CP3 validator đọc 124 records và 61 correlation IDs. |
+| `validate_logs.py` | 30/100 | 100/100 | Evidence 02 ghi 124 records/61 correlation IDs; CP4 rerun trên log runtime append-only đọc 157/78 và vẫn 0 missing/PII. |
 | `validate_dashboard.py` | 6/6 contract | 6/6 contract | Dashboard runtime đã render 6 panel bằng Streamlit AppTest. |
-| `pytest` | 22 passed với `--basetemp` | 25 passed | Mặc định bị 4 lỗi quyền ghi temp ngoài workspace; chuyển temp vào `.venv`. |
+| `pytest` | 22 passed với `--basetemp` | 25 passed | Chạy bằng Python trong `.venv` với `--basetemp` nằm trong workspace; có cảnh báo deprecation, không có test fail. |
 | Số traces hợp lệ | 0 | 24 root / 72 observations | 10 local-v1 traces và 14 managed prompt traces; mỗi trace có retrieval + generation child. |
 | Số PII leak | 0 theo validator | 0 theo validator | Probe bốn loại PII giả đều được thay bằng marker. |
-| Latency P95 / TTFT P95 | Chưa đo `/metrics` ở CP0 | 2665 ms / 50 ms | Snapshot cuối gồm workload thường, practice và CP3; incident batch riêng được ghi ở evidence 12. |
-| Retrieval success rate | Chưa đo | 100% | 56/56 `response_sent.tool_success=true` trong log cuối. |
+| Latency P95 / TTFT P95 | Chưa đo `/metrics` ở CP0 | 155 ms / 50 ms ở dashboard thường; 2666 ms / 50 ms trong incident | Dashboard thường và incident là hai snapshot khác nhau; incident batch được ghi ở evidence 12. |
+| Retrieval success rate | Chưa đo | 100% | Dashboard runtime và incident snapshot đều cho thấy `tool_success=true` với error rate 0%. |
 
-Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.115275,
-1915 input tokens, 7302 output tokens, quality proxy trung bình 0.8679.
+Snapshot dashboard runtime: 21 events trong cửa sổ 60 phút, latency P95 155 ms,
+retrieval success 100%, tổng cost $0.0202, 343 input tokens, 1.278 output tokens,
+quality proxy 0.88. Snapshot `/metrics` của incident có traffic 37, latency P95
+2666 ms, P99 2674 ms, TTFT P95 50 ms, tổng cost $0.0759 và quality trung bình 0.8622.
 
 ## 4. Logging và PII
 
@@ -60,7 +61,7 @@ Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.11527
 
 ## 5. Tracing và prompt versioning
 
-- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 24 root traces và 48 child observations (72 observations tổng); waterfall của hai managed prompt trace nằm trong [evidence](evidence/07-trace-waterfall.png).
+- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 24 root traces và 48 child observations (72 observations tổng); [waterfall](evidence/07-trace-waterfall.png) cho thấy đúng quan hệ root–retrieval–generation, còn metadata gắn prompt v1 nằm ở [08a](evidence/08a-trace-metadata-root.png) và [08b](evidence/08b-trace-metadata-generation.png).
 - **Cách nối trace với log:** root trace metadata có `correlation_id`; log cùng request ghi ID này. User ID được hash, session/feature được scrub trước khi gửi trace.
 - **Prompt name:** `day13-chat` theo `.env.example`.
 - **Version/label baseline:** prompt `day13-chat` v1 có labels `baseline` và `production`.
@@ -90,16 +91,16 @@ Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.11527
 ## 8. Giải thích và tự đánh giá
 
 - **Một quyết định kỹ thuật quan trọng và lý do:** giữ JSONL làm nguồn chuẩn của dashboard, còn Langfuse để xem waterfall/prompt. Dashboard vẫn có fallback local khi Langfuse tạm thời không truy cập được.
-- **Một lỗi/blocker đã gặp:** Python hiện có là 3.14.7; `pydantic==2.11.4` không có wheel phù hợp và build Rust bị chặn vì đường dẫn temp ngoài workspace. Pytest cũng mặc định ghi vào temp ngoài workspace. Browser UI automation không có browser surface.
-- **Cách tìm nguyên nhân và xử lý:** đọc pip/pytest traceback, nâng pin Pydantic lên 2.13.5 và cài lại `requirements.txt` thành công; dùng `--basetemp .venv/pytest_tmp`. Kiểm tra Streamlit bằng AppTest, chưa coi đây là screenshot.
+- **Một lỗi/blocker đã gặp:** Python hiện có là 3.14.7; pin Pydantic cũ `2.11.4` không có wheel phù hợp và build Rust bị chặn vì đường dẫn temp ngoài workspace. Pytest cũng mặc định ghi vào temp ngoài workspace. Browser UI automation không có browser surface.
+- **Cách tìm nguyên nhân và xử lý:** đọc pip/pytest traceback, nâng pin Pydantic lên 2.13.5 và cài lại `requirements.txt` thành công; dùng `--basetemp .venv/pytest_tmp`. Kiểm tra Streamlit bằng AppTest và bổ sung screenshot dashboard runtime riêng, không coi AppTest là screenshot.
 - **Cách hiểu luồng Metrics → Logs → Traces:** dashboard phát hiện phút và SLI bất thường; log lọc cùng phút để lấy `correlation_id`; trace tìm cùng ID để so thời gian/status retrieval và generation rồi mới kết luận root cause.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** version cho biết thay đổi prompt nào tạo ra hành vi mới; token và cost giúp tìm request đắt; SLO cho phép đo mức người dùng bị ảnh hưởng; rollback production label là cách phục hồi nhanh khi bản candidate gây thoái hóa.
 - **Điều quan trọng nhất đã học:** HTTP 200 chỉ chứng minh transport thành công; cần latency, quality, usage và span để đánh giá AI API.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** phần kỹ thuật, runtime evidence, commit và push repository cá nhân đã hoàn tất; chỉ còn nhập URL/SHA vào LMS. `config/challenge.json` cùng bản challenge cục bộ phải được giữ ngoài commit/remote theo quy định CP3.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** source/evidence gốc đã có trên commit `e22a54b`; bản report này là phần chốt trong commit local kế tiếp, sau đó SHA cuối phải được push rồi nhập vào LMS. `config/challenge.json` cùng bản challenge cục bộ phải được giữ ngoài commit/remote theo quy định CP3.
 
 ## 9. Checklist trước khi nộp
 
-- [x] Kết quả và evidence thuộc commit đã push; SHA cuối lấy bằng `git rev-parse HEAD`.
+- [ ] Report cập nhật cuối và evidence thuộc cùng commit đã push; SHA cuối lấy bằng `git rev-parse HEAD` sau khi push.
 - [x] Evidence ảnh và output text nền/practice hiện có mở được bằng đường dẫn tương đối.
 - [x] Incident evidence nối đúng metric → log → trace.
 - [x] Langfuse trace, prompt version, promote và rollback có evidence.
