@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602622
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
-- **Commit SHA cuối:** Chưa có commit nộp; lấy SHA sau khi hoàn tất evidence và push lên repo cá nhân đúng tên.
+- **Commit SHA cuối:** Chưa chốt để nộp LMS vì CP3/CP4 còn thiếu; mốc CP2 đã push là `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`. Sau khi hoàn tất, lấy SHA cuối từ GitHub/LMS.
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file gốc chưa thay đổi)
 
 ## 2. Evidence index
@@ -88,7 +88,7 @@ Tại thời điểm ghi report: 23 requests, 23 responses, tổng cost $0.04604
 - **Cách hiểu luồng Metrics → Logs → Traces:** dashboard phát hiện phút và SLI bất thường; log lọc cùng phút để lấy `correlation_id`; trace tìm cùng ID để so thời gian/status retrieval và generation rồi mới kết luận root cause.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** version cho biết thay đổi prompt nào tạo ra hành vi mới; token và cost giúp tìm request đắt; SLO cho phép đo mức người dùng bị ảnh hưởng; rollback production label là cách phục hồi nhanh khi bản candidate gây thoái hóa.
 - **Điều quan trọng nhất đã học:** HTTP 200 chỉ chứng minh transport thành công; cần latency, quality, usage và span để đánh giá AI API.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** thiếu Langfuse keys/project, xác nhận mở challenge, ảnh screenshot trình duyệt và commit SHA/remote cuối. Không có trace/prompt/incident evidence thật nên phần đó chưa thể nhận điểm tối đa.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** thiếu Langfuse keys/project, xác nhận mở challenge, ảnh screenshot trình duyệt và SHA cuối để nộp LMS. Không có trace/prompt/incident evidence thật nên phần đó chưa thể nhận điểm tối đa.
 
 ## 9. Checklist trước khi nộp
 
