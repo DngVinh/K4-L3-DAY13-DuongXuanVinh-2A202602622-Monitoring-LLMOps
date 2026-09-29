@@ -1,15 +1,17 @@
 Langfuse verification (29 Sep 2026)
 ====================================
+Project: day13-k4-l3a-2A202602622
 SDK: langfuse 4.15.6
 Endpoint: GET /api/public/v2/observations?limit=100
 Authentication: LANGFUSE_AUTH_OK=True (secret/key values are not recorded)
 
 Observed after the production and candidate runs:
-- 36 observations across 12 root traces.
-- Root observations: 12 x lab-agent-run (type AGENT).
-- Child observations: 12 x retrieval (type RETRIEVER) and 12 x fake-llm (type GENERATION).
-- All 24 child observations have a parentObservationId.
-- Root version counts: local-v1=10, managed version 1=1, managed version 2=1.
+- 72 observations across 24 root traces.
+- Root observations: 24 x lab-agent-run (type AGENT).
+- Child observations: 24 x retrieval (type RETRIEVER) and 24 x fake-llm (type GENERATION).
+- All 48 child observations have a parentObservationId.
+- Root version counts: local-v1=10, managed version 1=12, managed version 2=2.
 - Environment is dev; userId values are 12-character hashes in the API response.
 
-The managed prompt traces used for version evidence are listed in 07-trace-waterfall.txt.
+The managed prompt traces used for prompt evidence are listed in 07-trace-waterfall.txt.
+The CP3 incident trace is listed in 14-incident-trace.txt.

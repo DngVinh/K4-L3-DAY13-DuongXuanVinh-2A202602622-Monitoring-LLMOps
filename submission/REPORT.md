@@ -8,8 +8,8 @@
 - **MSSV:** 2A202602622
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
-- **Commit SHA cuối:** Chưa chốt để nộp LMS vì CP3/CP4 còn thiếu; mốc CP2 đã push là `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`. Sau khi hoàn tất, lấy SHA cuối từ GitHub/LMS.
-- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file gốc chưa thay đổi)
+- **Commit SHA cuối:** Chưa chốt để nộp LMS vì CP4 còn thiếu; mốc trước đó là `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`. Sau khi hoàn tất evidence và push, lấy SHA cuối từ GitHub/LMS.
+- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file CP3 đúng ID/seed, không sửa nội dung)
 
 ## 2. Evidence index
 
@@ -29,23 +29,25 @@
 | Prompt versions | [09-prompt-versions.txt](evidence/09-prompt-versions.txt) |
 | Prompt promote/rollback | [10-prompt-rollback.txt](evidence/10-prompt-rollback.txt) |
 | Dashboard runtime | [11-dashboard-runtime.txt](evidence/11-dashboard-runtime.txt); cần bổ sung screenshot trình duyệt có dữ liệu. |
-| Incident metric, log, trace | Chưa chạy challenge khi chưa có thông báo mở của Lab Coach. |
+| Incident metric | [12-incident-metric.txt](evidence/12-incident-metric.txt) |
+| Incident log | [13-incident-log.txt](evidence/13-incident-log.txt) |
+| Incident trace | [14-incident-trace.txt](evidence/14-incident-trace.txt) |
 | Practice (không tính điểm CP3) | [12-practice-metric-log.txt](evidence/12-practice-metric-log.txt) |
 
 ## 3. Kết quả kỹ thuật
 
 | Nội dung | Baseline | Kết quả cuối | Nhận xét |
 |---|---|---|---|
-| `validate_logs.py` | 30/100 | 100/100 | Baseline 21 records; sau practice 71 records và 35 correlation IDs. |
+| `validate_logs.py` | 30/100 | 100/100 | Baseline 21 records; sau CP3 validator đọc 124 records và 61 correlation IDs. |
 | `validate_dashboard.py` | 6/6 contract | 6/6 contract | Dashboard runtime đã render 6 panel bằng Streamlit AppTest. |
 | `pytest` | 22 passed với `--basetemp` | 25 passed | Mặc định bị 4 lỗi quyền ghi temp ngoài workspace; chuyển temp vào `.venv`. |
-| Số traces hợp lệ | 0 | 12 root / 36 observations | 10 local-v1 traces và 2 managed prompt traces; mỗi managed trace có retrieval + generation child. |
+| Số traces hợp lệ | 0 | 24 root / 72 observations | 10 local-v1 traces và 14 managed prompt traces; mỗi trace có retrieval + generation child. |
 | Số PII leak | 0 theo validator | 0 theo validator | Probe bốn loại PII giả đều được thay bằng marker. |
-| Latency P95 / TTFT P95 | Chưa đo `/metrics` ở CP0 | 152 ms / 50 ms | 23 request thành công trong log sau CP1/2. |
-| Retrieval success rate | Chưa đo | 100% | 23/23 `response_sent.tool_success=true`. |
+| Latency P95 / TTFT P95 | Chưa đo `/metrics` ở CP0 | 2665 ms / 50 ms | Snapshot cuối gồm workload thường, practice và CP3; incident batch riêng được ghi ở evidence 12. |
+| Retrieval success rate | Chưa đo | 100% | 56/56 `response_sent.tool_success=true` trong log cuối. |
 
-Tại thời điểm ghi report: 23 requests, 23 responses, tổng cost $0.046044,
-793 input tokens, 2911 output tokens, quality proxy trung bình 0.87.
+Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.115275,
+1915 input tokens, 7302 output tokens, quality proxy trung bình 0.8679.
 
 ## 4. Logging và PII
 
@@ -56,12 +58,12 @@ Tại thời điểm ghi report: 23 requests, 23 responses, tổng cost $0.04604
 
 ## 5. Tracing và prompt versioning
 
-- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 12 root traces và 24 child observations; waterfall của hai managed prompt trace nằm trong [evidence](evidence/07-trace-waterfall.txt).
+- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 24 root traces và 48 child observations; waterfall của hai managed prompt trace nằm trong [evidence](evidence/07-trace-waterfall.txt).
 - **Cách nối trace với log:** root trace metadata có `correlation_id`; log cùng request ghi ID này. User ID được hash, session/feature được scrub trước khi gửi trace.
 - **Prompt name:** `day13-chat` theo `.env.example`.
 - **Version/label baseline:** prompt `day13-chat` v1 có labels `baseline` và `production`.
-- **Version/label candidate:** v2 có label `candidate`; cùng input đã chạy với production và candidate.
-- **Trace ID của mỗi version:** production/v1 là `0106410a6f964781f4241d1a412905c4`; candidate/v2 là `665ce986b3201c13abeb52a97f0b3c42`.
+- **Version/label candidate:** v2 có label `candidate`; cùng input đã chạy qua HTTP API với production và candidate.
+- **Trace ID của mỗi version:** production/v1 là `0106410a6f964781f4241d1a412905c4` (`req-e19e83f3`); candidate/v2 là `8416da87a7eb5737eb2ab59da2d03f14` (`req-cand1234`).
 - **Cách promote và rollback `production`:** đã promote production sang v2 (lookup trả v2), sau đó rollback về v1 (lookup cuối trả v1). Evidence ở [09](evidence/09-prompt-versions.txt) và [10](evidence/10-prompt-rollback.txt).
 
 ## 6. Dashboard, SLO và alerts
@@ -75,13 +77,13 @@ Tại thời điểm ghi report: 23 requests, 23 responses, tổng cost $0.04604
 
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1`, seed `1311`, đã xác nhận bằng đọc file gốc.
 - **Practice trước challenge:** `rag_slow` qua `--scenario` làm P95 tăng từ 152 ms lên 2660 ms. Log ví dụ `req-f727926a` có latency 2651 ms, TTFT 50 ms; đây chỉ là kiểm thử dashboard/log, không phải evidence CP3.
-- **Khoảng thời gian điều tra:** chưa có; đang chờ thông báo mở challenge K4-L3A của Lab Coach.
-- **Triệu chứng từ metrics:** chưa có bằng chứng challenge chính thức.
-- **Log line và correlation ID liên quan:** chưa có.
-- **Trace ID và span gây ảnh hưởng:** CP3 chưa mở nên chưa có incident trace chính thức; CP2 trace/prompt evidence đã có ở mục 5.
-- **Root cause:** chưa kết luận khi thiếu chuỗi metric → log → trace.
-- **Fix action:** sau khi điều tra, sửa nguyên nhân được span chứng minh; không suy luận từ tên scenario trong config.
-- **Preventive measure:** bổ sung alert triệu chứng và kiểm tra error-budget burn sau fix.
+- **Khoảng thời gian điều tra:** `2026-09-29T08:59:19.183844Z`–`2026-09-29T08:59:21.847206Z` (UTC), batch 5 request challenge.
+- **Triệu chứng từ metrics:** `/metrics` trong incident có latency P95 `2666 ms`, P99 `2674 ms`, TTFT P95 `50 ms`; cả 5 request challenge đều trên ngưỡng `2000 ms`. Error breakdown rỗng và retrieval success `100%`.
+- **Log line và correlation ID liên quan:** chọn `response_sent` lúc `2026-09-29T08:59:21.847206Z`, `correlation_id=req-bb51f01b`, latency `2651 ms`, retrieval `tool_success=true`.
+- **Trace ID và span gây ảnh hưởng:** trace `d73bfbc96f072d50c84d0be9b4cdd944`; root `lab-agent-run` `2.652 s`, child `retrieval` `2.501 s`, child `fake-llm` `0.151 s`.
+- **Root cause:** incident `rag_slow` làm retrieval span chiếm khoảng 94% thời gian root; generation vẫn bình thường. Chuỗi metric → log → trace cùng chỉ về retrieval chậm.
+- **Fix action:** đã tắt incident sau khi thu thập evidence; trong hệ thống thật dùng cached/healthy retrieval backend, timeout và fallback, rồi xác nhận P95 dưới `2000 ms`.
+- **Preventive measure:** giữ alert `HighUserLatencyP95`, bổ sung SLI/alert latency riêng cho retrieval span và runbook kiểm tra backend retrieval/error-budget burn.
 
 ## 8. Giải thích và tự đánh giá
 
@@ -91,13 +93,13 @@ Tại thời điểm ghi report: 23 requests, 23 responses, tổng cost $0.04604
 - **Cách hiểu luồng Metrics → Logs → Traces:** dashboard phát hiện phút và SLI bất thường; log lọc cùng phút để lấy `correlation_id`; trace tìm cùng ID để so thời gian/status retrieval và generation rồi mới kết luận root cause.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** version cho biết thay đổi prompt nào tạo ra hành vi mới; token và cost giúp tìm request đắt; SLO cho phép đo mức người dùng bị ảnh hưởng; rollback production label là cách phục hồi nhanh khi bản candidate gây thoái hóa.
 - **Điều quan trọng nhất đã học:** HTTP 200 chỉ chứng minh transport thành công; cần latency, quality, usage và span để đánh giá AI API.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** còn chờ Lab Coach mở challenge chính thức K4-L3A, ảnh screenshot dashboard/trace trên UI và SHA cuối để nộp LMS. CP3 không được chạy trước thông báo mở challenge.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** còn thiếu ảnh screenshot dashboard/trace trên UI và SHA cuối để nộp LMS. `config/challenge.json` cần được giữ ngoài commit/remote theo quy định CP3 mới.
 
 ## 9. Checklist trước khi nộp
 
 - [ ] Kết quả và evidence thuộc commit SHA cuối.
 - [x] Output text hiện có mở được bằng đường dẫn tương đối.
-- [ ] Incident evidence nối đúng metric → log → trace (chỉ hoàn thành sau khi Lab Coach mở CP3).
+- [x] Incident evidence nối đúng metric → log → trace.
 - [x] Langfuse trace, prompt version, promote và rollback có evidence.
 - [x] API, dashboard, tests và validators chạy được với `requirements.txt` đã cập nhật.
 - [x] Evidence đã ghi không có secret, PII thô hoặc dữ liệu của người khác.

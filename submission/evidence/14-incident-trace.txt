@@ -1,0 +1,24 @@
+CP3 incident trace evidence (29 Sep 2026)
+==========================================
+Lookup key: correlation_id=req-bb51f01b
+Trace ID: d73bfbc96f072d50c84d0be9b4cdd944
+Session: k4-l3a-challenge-s05
+Prompt: day13-chat / production / version 1
+User ID in Langfuse: 12-character hash (no raw user ID)
+
+Observation tree from Langfuse Observations API v2:
+- lab-agent-run / AGENT / root / version=1 / latency=2.652 s
+  - retrieval / RETRIEVER / parent=498ad85571925919 / latency=2.501 s
+  - fake-llm / GENERATION / parent=498ad85571925919 / latency=0.151 s
+    model=claude-sonnet-4-5
+    usage: input=36, output=177, total=213 tokens
+    cost: $0.002763; ttft_ms metadata=50
+
+The retrieval child is approximately 94% of root duration and is the only
+slow span. Generation remains normal, so the root cause is the injected slow
+retrieval path (`rag_slow`), not the LLM generation.
+
+Fix action: disable the slow retrieval path, restore the healthy/cached
+retrieval backend, and verify P95 returns below 2000 ms.
+Preventive measure: retain HighUserLatencyP95 alert and add a retrieval-span
+latency SLI/alert with a runbook check for retrieval backend latency.

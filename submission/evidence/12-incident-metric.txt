@@ -1,0 +1,30 @@
+CP3 incident metric evidence (29 Sep 2026, K4-L3A)
+====================================================
+Challenge ID: day13-k4-l3a-monitoring-llmops-v1
+Cohort: K4
+Seed: 1311
+Incident: rag_slow
+Affected feature: monitoring
+Challenge latency threshold: 2000 ms
+
+Command sequence:
+  python scripts/inject_incident.py
+  python scripts/load_test.py --challenge --concurrency 5
+
+The latest five-request challenge window was:
+  2026-09-29T08:59:19.183844Z through 2026-09-29T08:59:21.847206Z
+
+Metrics snapshot from GET /metrics during the incident:
+- traffic: 22
+- latency P50: 529 ms
+- latency P95: 2666 ms
+- latency P99: 2674 ms
+- TTFT P95: 50 ms
+- error breakdown: {}
+- retrieval success for responses: 100%
+
+The five challenge responses were all above the 2000 ms threshold. Their
+latencies were 2652, 2651, 2652, 2651 and 2651 ms (batch P95: 2652 ms).
+The symptom is tail/user latency; HTTP errors and retrieval success did not
+degrade. The incident was disabled after evidence collection and /health
+reported rag_slow=false.

@@ -8,13 +8,18 @@ production label -> prompt version 1
 - root: lab-agent-run / AGENT / version=1 / latency=0.530 s
   - retrieval / RETRIEVER / parent=78f54731ff63954f / latency=0.001 s
   - fake-llm / GENERATION / parent=78f54731ff63954f / latency=0.152 s
+    usage: input=30, output=154, total=184 tokens; cost=$0.0024; ttft_ms=50
 
 candidate label -> prompt version 2
-- correlation_id: candidate-prompt-evidence
-- trace_id: 665ce986b3201c13abeb52a97f0b3c42
-- root: lab-agent-run / AGENT / version=2 / latency=0.474 s
-  - retrieval / RETRIEVER / parent=d4deb530077a0209 / latency=0.000 s
-  - fake-llm / GENERATION / parent=d4deb530077a0209 / latency=0.152 s
+- correlation_id: req-cand1234
+- trace_id: 8416da87a7eb5737eb2ab59da2d03f14
+- root: lab-agent-run / AGENT / version=2 / latency=0.530 s
+  - retrieval / RETRIEVER / parent=3f7de4feb9bf4d95 / latency=not reported (0 ms local)
+  - fake-llm / GENERATION / parent=3f7de4feb9bf4d95 / latency=0.152 s
+    usage: input=38, output=176, total=214 tokens; cost=$0.002754; ttft_ms=50
+
+The candidate trace was generated through the HTTP API, so req-cand1234 is
+also present in data/logs.jsonl.
 
 The root is the parent of both child observations. Raw input/output capture is disabled
 in app/agent.py; the API listing contains only safe metadata fields.

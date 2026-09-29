@@ -1,0 +1,16 @@
+CP3 incident log evidence (29 Sep 2026)
+========================================
+The latest challenge batch produced five request_received/response_sent pairs.
+All records have feature=monitoring, tool_name=retrieval and tool_success=true.
+
+Representative response_sent line:
+{"ts":"2026-09-29T08:59:21.847206Z","event":"response_sent","correlation_id":"req-bb51f01b","session_id":"k4-l3a-challenge-s05","feature":"monitoring","latency_ms":2651,"ttft_ms":50,"tool_name":"retrieval","tool_success":true,"tokens_in":36,"tokens_out":177,"cost_usd":0.002763,"quality_score":0.8}
+
+Other challenge correlation IDs in the same window:
+- req-d4e6a320: 2652 ms (s04)
+- req-768d6a37: 2651 ms (s03)
+- req-38b653ca: 2652 ms (s02)
+- req-3ac3b41b: 2651 ms (s01)
+
+No raw user ID or PII appears in these records. The selected ID for trace
+lookup is req-bb51f01b.

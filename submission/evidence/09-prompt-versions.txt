@@ -11,5 +11,7 @@ Label lookup after creation:
 - production -> version 1
 - candidate -> version 2
 
-The same input was run with production (trace 0106410a6f964781f4241d1a412905c4)
-and candidate (trace 665ce986b3201c13abeb52a97f0b3c42). See 07-trace-waterfall.txt.
+The same input was run through the HTTP API with production (trace
+0106410a6f964781f4241d1a412905c4, correlation_id=req-e19e83f3) and candidate
+(trace 8416da87a7eb5737eb2ab59da2d03f14, correlation_id=req-cand1234).
+See 07-trace-waterfall.txt and 08-trace-metadata.txt.

@@ -1,8 +1,17 @@
 Trace metadata and privacy evidence (29 Sep 2026)
 ==================================================
+- Langfuse project: day13-k4-l3a-2A202602622.
 - Root metadata configured by app/agent.py includes feature, model, env and correlation_id.
-- Langfuse response shows environment=dev, sessionId=prompt-evidence and userId length=12
-  (short hash, not the raw user ID) for both managed prompt traces.
+- Production/v1 trace `0106410a6f964781f4241d1a412905c4` has correlation_id=req-e19e83f3,
+  prompt_name=day13-chat, prompt_label=production, prompt_version=1,
+  model=claude-sonnet-4-5, generation usage=30 input/154 output, cost=$0.0024,
+  and ttft_ms=50 in metadata.
+- Candidate/v2 trace `8416da87a7eb5737eb2ab59da2d03f14` has correlation_id=req-cand1234,
+  prompt_name=day13-chat, prompt_label=candidate, prompt_version=2,
+  model=claude-sonnet-4-5, generation usage=38 input/176 output, cost=$0.002754,
+  and ttft_ms=50 in metadata.
+- Both traces show environment=dev, sessionId=prompt-evidence and userId length=12
+  (short hash, not the raw user ID).
 - Child generation observation carries model, input/output usage, total cost and TTFT in
   the SDK update; retrieval carries doc_count.
 - observe(... capture_input=False, capture_output=False) is used for the root and no raw
