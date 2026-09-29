@@ -8,7 +8,8 @@
 - **MSSV:** 2A202602622
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
-- **Commit SHA cuối:** Chưa chốt trong working tree này; sau khi commit các thay đổi cuối, lấy SHA đó trên GitHub để nộp LMS. Không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470` làm SHA nộp.
+- **Commit chứa source/evidence đã kiểm định:** `59dc4ada085cda083d7c528f0655766a02d1e991`.
+- **Commit SHA cuối để nộp LMS:** sau khi push commit cuối, chạy `git rev-parse HEAD` và nộp đúng SHA đó; không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`.
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file CP3 đúng ID/seed, không sửa nội dung)
 
 ## 2. Evidence index
