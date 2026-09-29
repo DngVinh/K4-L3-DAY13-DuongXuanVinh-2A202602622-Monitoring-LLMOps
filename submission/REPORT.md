@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602622
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
-- **Commit SHA cuối:** Chưa chốt để nộp LMS vì CP4 còn thiếu; mốc trước đó là `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`. Sau khi hoàn tất evidence và push, lấy SHA cuối từ GitHub/LMS.
+- **Commit SHA cuối:** Chưa chốt trong working tree này; sau khi commit các thay đổi cuối, lấy SHA đó trên GitHub để nộp LMS. Không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470` làm SHA nộp.
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file CP3 đúng ID/seed, không sửa nội dung)
 
 ## 2. Evidence index
@@ -18,20 +18,20 @@
 | Evidence | Đường dẫn |
 |---|---|
 | CP0 baseline | [00-baseline.txt](evidence/00-baseline.txt) |
-| Pytest hiện tại | [01-pytest.txt](evidence/01-pytest.txt) |
-| Log validator | [02-log-validator.txt](evidence/02-log-validator.txt) |
-| Dashboard validator | [03-dashboard-validator.txt](evidence/03-dashboard-validator.txt) |
-| Structured log | [04-structured-log.txt](evidence/04-structured-log.txt) |
-| PII redaction | [05-pii-redaction.txt](evidence/05-pii-redaction.txt) |
-| Trace list | [06-trace-list.txt](evidence/06-trace-list.txt) |
-| Trace waterfall | [07-trace-waterfall.txt](evidence/07-trace-waterfall.txt) |
-| Trace metadata/privacy | [08-trace-metadata.txt](evidence/08-trace-metadata.txt) |
-| Prompt versions | [09-prompt-versions.txt](evidence/09-prompt-versions.txt) |
-| Prompt promote/rollback | [10-prompt-rollback.txt](evidence/10-prompt-rollback.txt) |
-| Dashboard runtime | [11-dashboard-runtime.txt](evidence/11-dashboard-runtime.txt); cần bổ sung screenshot trình duyệt có dữ liệu. |
-| Incident metric | [12-incident-metric.txt](evidence/12-incident-metric.txt) |
-| Incident log | [13-incident-log.txt](evidence/13-incident-log.txt) |
-| Incident trace | [14-incident-trace.txt](evidence/14-incident-trace.txt) |
+| Pytest hiện tại | [01-pytest.png](evidence/01-pytest.png) |
+| Log validator | [02-log-validator.png](evidence/02-log-validator.png) |
+| Dashboard validator | [03-dashboard-validator.png](evidence/03-dashboard-validator.png) |
+| Structured log | [04-structured-log.png](evidence/04-structured-log.png) |
+| PII redaction | [05-pii-redaction.png](evidence/05-pii-redaction.png) |
+| Trace list | [06-trace-list.png](evidence/06-trace-list.png) |
+| Trace waterfall | [07-trace-waterfall.png](evidence/07-trace-waterfall.png) |
+| Trace metadata/privacy | [08a-trace-metadata-root.png](evidence/08a-trace-metadata-root.png); [08b-trace-metadata-generation.png](evidence/08b-trace-metadata-generation.png) |
+| Prompt versions | [09-prompt-versions.png](evidence/09-prompt-versions.png) |
+| Prompt promote/rollback | [10a-prompt-promoted.png](evidence/10a-prompt-promoted.png); [10b-prompt-rollback.png](evidence/10b-prompt-rollback.png) |
+| Dashboard runtime | [11-dashboard-overview.png](evidence/11-dashboard-overview.png) |
+| Incident metric | [12-incident-metric.png](evidence/12-incident-metric.png) |
+| Incident log | [13-incident-log.png](evidence/13-incident-log.png) |
+| Incident trace | [14-incident-trace.png](evidence/14-incident-trace.png) |
 | Practice (không tính điểm CP3) | [12-practice-metric-log.txt](evidence/12-practice-metric-log.txt) |
 
 ## 3. Kết quả kỹ thuật
@@ -54,17 +54,17 @@ Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.11527
 - **Cách tạo/nhận và truyền correlation ID:** middleware xóa context mỗi request, nhận `x-request-id` an toàn hoặc sinh `req-<8-hex>`, bind vào contextvars, trả cùng ID và thời gian xử lý ở response header. ID trong body và log khớp header.
 - **Các metadata được ghi vào structured log:** `user_id_hash` SHA-256 rút gọn, `session_id`, `feature`, `model`, `env`, timestamp, event, tokens, cost, latency, TTFT, quality và trạng thái retrieval.
 - **Cách bảo đảm PII được scrub trước khi ghi:** `scrub_event` duyệt đệ quy mọi chuỗi trong log trước `JsonlFileProcessor` và JSON renderer; input preview cũng được scrub trước khi cắt ngắn. Header ID không an toàn bị thay bằng ID mới.
-- **Cách kiểm chứng kết quả:** [validator](evidence/02-log-validator.txt), [log thực tế](evidence/04-structured-log.txt), [probe PII](evidence/05-pii-redaction.txt) và `tests/test_request_context.py`.
+- **Cách kiểm chứng kết quả:** [validator](evidence/02-log-validator.png), [log thực tế](evidence/04-structured-log.png), [probe PII](evidence/05-pii-redaction.png) và `tests/test_request_context.py`.
 
 ## 5. Tracing và prompt versioning
 
-- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 24 root traces và 48 child observations; waterfall của hai managed prompt trace nằm trong [evidence](evidence/07-trace-waterfall.txt).
+- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` chứa child `retrieval` (`retriever`) và `fake-llm` (`generation`). Generation gửi model, usage input/output, total cost và TTFT; không capture raw input/output. Langfuse đã xác nhận 24 root traces và 48 child observations (72 observations tổng); waterfall của hai managed prompt trace nằm trong [evidence](evidence/07-trace-waterfall.png).
 - **Cách nối trace với log:** root trace metadata có `correlation_id`; log cùng request ghi ID này. User ID được hash, session/feature được scrub trước khi gửi trace.
 - **Prompt name:** `day13-chat` theo `.env.example`.
 - **Version/label baseline:** prompt `day13-chat` v1 có labels `baseline` và `production`.
 - **Version/label candidate:** v2 có label `candidate`; cùng input đã chạy qua HTTP API với production và candidate.
 - **Trace ID của mỗi version:** production/v1 là `0106410a6f964781f4241d1a412905c4` (`req-e19e83f3`); candidate/v2 là `8416da87a7eb5737eb2ab59da2d03f14` (`req-cand1234`).
-- **Cách promote và rollback `production`:** đã promote production sang v2 (lookup trả v2), sau đó rollback về v1 (lookup cuối trả v1). Evidence ở [09](evidence/09-prompt-versions.txt) và [10](evidence/10-prompt-rollback.txt).
+- **Cách promote và rollback `production`:** đã promote production sang v2 (lookup trả v2), sau đó rollback về v1 (lookup cuối trả v1). Evidence ở [09](evidence/09-prompt-versions.png) và [10a](evidence/10a-prompt-promoted.png), [10b](evidence/10b-prompt-rollback.png).
 
 ## 6. Dashboard, SLO và alerts
 
@@ -93,12 +93,12 @@ Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.11527
 - **Cách hiểu luồng Metrics → Logs → Traces:** dashboard phát hiện phút và SLI bất thường; log lọc cùng phút để lấy `correlation_id`; trace tìm cùng ID để so thời gian/status retrieval và generation rồi mới kết luận root cause.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** version cho biết thay đổi prompt nào tạo ra hành vi mới; token và cost giúp tìm request đắt; SLO cho phép đo mức người dùng bị ảnh hưởng; rollback production label là cách phục hồi nhanh khi bản candidate gây thoái hóa.
 - **Điều quan trọng nhất đã học:** HTTP 200 chỉ chứng minh transport thành công; cần latency, quality, usage và span để đánh giá AI API.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** còn thiếu ảnh screenshot dashboard/trace trên UI và SHA cuối để nộp LMS. `config/challenge.json` cần được giữ ngoài commit/remote theo quy định CP3 mới.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** phần kỹ thuật và runtime evidence đã hoàn tất trong working tree; còn bước tạo commit cuối, push repository cá nhân và nhập SHA vào LMS. `config/challenge.json` cùng bản challenge cục bộ phải được giữ ngoài commit/remote theo quy định CP3.
 
 ## 9. Checklist trước khi nộp
 
 - [ ] Kết quả và evidence thuộc commit SHA cuối.
-- [x] Output text hiện có mở được bằng đường dẫn tương đối.
+- [x] Evidence ảnh và output text nền/practice hiện có mở được bằng đường dẫn tương đối.
 - [x] Incident evidence nối đúng metric → log → trace.
 - [x] Langfuse trace, prompt version, promote và rollback có evidence.
 - [x] API, dashboard, tests và validators chạy được với `requirements.txt` đã cập nhật.

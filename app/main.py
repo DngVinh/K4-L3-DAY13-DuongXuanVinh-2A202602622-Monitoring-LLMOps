@@ -27,6 +27,7 @@ async def lifespan(_: FastAPI):
     log.info(
         "app_started",
         service=os.getenv("APP_NAME", "day13-monitoring-llmops-lab"),
+        correlation_id="system-startup",
         env=os.getenv("APP_ENV", "dev"),
         payload={"tracing_enabled": tracing_enabled()},
     )
