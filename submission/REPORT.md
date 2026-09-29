@@ -9,7 +9,8 @@
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/DngVinh/K4-L3-DAY13-DuongXuanVinh-2A202602622-Monitoring-LLMOps (repo cá nhân public theo xác nhận của học viên)
 - **Commit chứa source/evidence đã kiểm định:** `59dc4ada085cda083d7c528f0655766a02d1e991`.
-- **Commit SHA cuối để nộp LMS:** sau khi push commit cuối, chạy `git rev-parse HEAD` và nộp đúng SHA đó; không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`.
+- **Commit đã push gần nhất trước khi chốt báo cáo:** `8abb34bb744e9f1efb0afd1104d1962bd6a17344`.
+- **Commit SHA cuối để nộp LMS:** sau khi push commit REPORT cuối, chạy `git rev-parse HEAD` và nộp đúng SHA đó; không dùng SHA cũ `c76ba2e7c983caf1cff13fa5aeb744e4aca5b470`.
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (seed `1311`; file CP3 đúng ID/seed, không sửa nội dung)
 
 ## 2. Evidence index
@@ -94,14 +95,14 @@ Tại thời điểm ghi report: 56 requests, 56 responses, tổng cost $0.11527
 - **Cách hiểu luồng Metrics → Logs → Traces:** dashboard phát hiện phút và SLI bất thường; log lọc cùng phút để lấy `correlation_id`; trace tìm cùng ID để so thời gian/status retrieval và generation rồi mới kết luận root cause.
 - **Vai trò của prompt version, token/cost, SLO hoặc rollback trong vận hành LLM:** version cho biết thay đổi prompt nào tạo ra hành vi mới; token và cost giúp tìm request đắt; SLO cho phép đo mức người dùng bị ảnh hưởng; rollback production label là cách phục hồi nhanh khi bản candidate gây thoái hóa.
 - **Điều quan trọng nhất đã học:** HTTP 200 chỉ chứng minh transport thành công; cần latency, quality, usage và span để đánh giá AI API.
-- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** phần kỹ thuật và runtime evidence đã hoàn tất trong working tree; còn bước tạo commit cuối, push repository cá nhân và nhập SHA vào LMS. `config/challenge.json` cùng bản challenge cục bộ phải được giữ ngoài commit/remote theo quy định CP3.
+- **Hạn chế hoặc phần chưa hoàn thành, nếu có:** phần kỹ thuật, runtime evidence, commit và push repository cá nhân đã hoàn tất; chỉ còn nhập URL/SHA vào LMS. `config/challenge.json` cùng bản challenge cục bộ phải được giữ ngoài commit/remote theo quy định CP3.
 
 ## 9. Checklist trước khi nộp
 
-- [ ] Kết quả và evidence thuộc commit SHA cuối.
+- [x] Kết quả và evidence thuộc commit đã push; SHA cuối lấy bằng `git rev-parse HEAD`.
 - [x] Evidence ảnh và output text nền/practice hiện có mở được bằng đường dẫn tương đối.
 - [x] Incident evidence nối đúng metric → log → trace.
 - [x] Langfuse trace, prompt version, promote và rollback có evidence.
 - [x] API, dashboard, tests và validators chạy được với `requirements.txt` đã cập nhật.
 - [x] Evidence đã ghi không có secret, PII thô hoặc dữ liệu của người khác.
-- [ ] URL repo đúng tên và commit SHA cuối đã được nộp trên LMS/Codelabs.
+- [ ] URL repo và commit SHA cuối đã được chuẩn bị để nộp trên LMS/Codelabs; thao tác nộp LMS còn do học viên thực hiện.
