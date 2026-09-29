@@ -1,0 +1,8 @@
+Prompt promote/rollback evidence (29 Sep 2026)
+===============================================
+1. update_prompt(name=day13-chat, version=2, new_labels=[candidate, production])
+   -> production lookup returned version 2.
+2. update_prompt(name=day13-chat, version=1, new_labels=[baseline, production])
+   -> production lookup returned version 1 (final state after rollback).
+
+No key, secret, raw prompt input, or PII is included here.

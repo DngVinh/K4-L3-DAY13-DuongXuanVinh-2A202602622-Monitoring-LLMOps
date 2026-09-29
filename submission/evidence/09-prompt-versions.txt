@@ -1,0 +1,15 @@
+Langfuse prompt version evidence (29 Sep 2026)
+==============================================
+Prompt name: day13-chat
+
+Created through Langfuse Python SDK v4:
+- version 1: labels baseline, production; commit message CP2 baseline prompt v1
+- version 2: label candidate; commit message CP2 candidate prompt v2
+
+Label lookup after creation:
+- baseline -> version 1
+- production -> version 1
+- candidate -> version 2
+
+The same input was run with production (trace 0106410a6f964781f4241d1a412905c4)
+and candidate (trace 665ce986b3201c13abeb52a97f0b3c42). See 07-trace-waterfall.txt.

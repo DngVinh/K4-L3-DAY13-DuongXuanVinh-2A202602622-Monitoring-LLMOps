@@ -1,0 +1,20 @@
+Langfuse trace/span tree evidence (29 Sep 2026)
+===============================================
+Same input: "What is the retrieval latency budget?"
+
+production label -> prompt version 1
+- correlation_id: req-e19e83f3
+- trace_id: 0106410a6f964781f4241d1a412905c4
+- root: lab-agent-run / AGENT / version=1 / latency=0.530 s
+  - retrieval / RETRIEVER / parent=78f54731ff63954f / latency=0.001 s
+  - fake-llm / GENERATION / parent=78f54731ff63954f / latency=0.152 s
+
+candidate label -> prompt version 2
+- correlation_id: candidate-prompt-evidence
+- trace_id: 665ce986b3201c13abeb52a97f0b3c42
+- root: lab-agent-run / AGENT / version=2 / latency=0.474 s
+  - retrieval / RETRIEVER / parent=d4deb530077a0209 / latency=0.000 s
+  - fake-llm / GENERATION / parent=d4deb530077a0209 / latency=0.152 s
+
+The root is the parent of both child observations. Raw input/output capture is disabled
+in app/agent.py; the API listing contains only safe metadata fields.
