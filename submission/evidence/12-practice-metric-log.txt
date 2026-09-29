@@ -1,0 +1,4 @@
+Practice scenario only: rag_slow was enabled with --scenario rag_slow, then disabled. This is not the official challenge.
+The aggregate latency P95 increased from 152 ms before practice to 2660 ms after ten practice requests. All ten practice responses had latency at least 2000 ms.
+One matching request: correlation_id=req-f727926a, response_sent ts=2026-09-29T02:40:56.363601Z, latency_ms=2651, ttft_ms=50, feature=qa, tool_success=true.
+No Langfuse trace ID is available because tracing_enabled=false without project keys.

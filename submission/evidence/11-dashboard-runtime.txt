@@ -1,0 +1,6 @@
+Runtime check: Streamlit AppTest.from_file('dashboard.py').run(timeout=30)
+exceptions: 0
+subheaders: Latency percentiles and TTFT; Request traffic; Error rate and retrieval success; Cost over time; Input and output tokens; Quality proxy
+metrics rendered: 11
+Source: data/logs.jsonl, rolling 60-minute window, 30-second fragment refresh.
+This is a headless runtime check, not a browser screenshot. The browser surface was unavailable in this environment.

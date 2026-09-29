@@ -1,25 +1,28 @@
 alerts:
-  - name: TODO_alert_1
-    severity: TODO
-    condition: TODO
-    duration: TODO
+  - name: HighUserLatencyP95
+    severity: critical
+    condition: 'p95(response_sent.latency_ms over 5m) > 3000 and count(request_received over 5m) >= 5'
+    duration: 5m
     type: symptom-based
     channel: slack
-    owner: TODO
-    runbook: docs/alerts.md#alert-1
-  - name: TODO_alert_2
-    severity: TODO
-    condition: TODO
-    duration: TODO
+    slack_channel: '#day13-l3a-alerts'
+    owner: ai-api-oncall
+    runbook: docs/alerts.md#high-user-latency-p95
+  - name: ElevatedRequestErrors
+    severity: critical
+    condition: 'count(request_failed over 5m) / count(request_received over 5m) * 100 > 2 and count(request_received over 5m) >= 5'
+    duration: 5m
     type: symptom-based
     channel: slack
-    owner: TODO
-    runbook: docs/alerts.md#alert-2
-  - name: TODO_alert_3
-    severity: TODO
-    condition: TODO
-    duration: TODO
+    slack_channel: '#day13-l3a-alerts'
+    owner: ai-api-oncall
+    runbook: docs/alerts.md#elevated-request-errors
+  - name: ExcessiveUserCost
+    severity: warning
+    condition: 'sum(response_sent.cost_usd over 24h) > 2.5 and count(response_sent over 24h) >= 5'
+    duration: 10m
     type: symptom-based
     channel: slack
-    owner: TODO
-    runbook: docs/alerts.md#alert-3
+    slack_channel: '#day13-l3a-alerts'
+    owner: ai-api-oncall
+    runbook: docs/alerts.md#excessive-user-cost

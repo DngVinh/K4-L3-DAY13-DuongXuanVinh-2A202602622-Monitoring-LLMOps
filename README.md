@@ -81,6 +81,16 @@ python -m pytest -q
 
 Baseline log chưa đạt là bình thường vì các `TODO` của CP1 chưa được làm. Ghi lại kết quả baseline vào `submission/REPORT.md` trước khi sửa.
 
+Dashboard runtime sau khi chạy API và tạo log:
+
+```bash
+python -m streamlit run dashboard.py
+```
+
+Mở `http://localhost:8501` để xem sáu panel từ `data/logs.jsonl`. Trên máy
+không cho pytest ghi vào thư mục temp mặc định, chạy
+`python -m pytest -q --basetemp .venv/pytest_tmp`.
+
 ## Lộ trình 14:00–18:00 (240 phút)
 
 | Mốc | Thời gian | Việc chính | Hoàn thành khi |

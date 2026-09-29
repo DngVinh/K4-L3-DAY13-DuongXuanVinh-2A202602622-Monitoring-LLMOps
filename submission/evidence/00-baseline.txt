@@ -1,0 +1,8 @@
+CP0 baseline (Python 3.14.7, compatible packages in .venv)
+/health: {"ok":true,"tracing_enabled":false,"incidents":{"rag_slow":false,"tool_fail":false,"cost_spike":false}}
+load_test.py: 10 HTTP 200 responses, each with correlation_id=MISSING
+validate_logs.py: 21 records; missing required=20; missing enrichment=20; unique IDs=0; PII leaks=0; score=30/100
+validate_dashboard.py: HỢP LỆ: 6/6 panel có trong dashboard contract.
+pytest initial run: 18 passed, 4 errors because pytest attempted to write under a blocked user-profile temp directory.
+pytest with --basetemp .pytest_tmp: 22 passed, 1 warning, 2 subtests passed.
+Pinned requirements could not install on the available Python 3.14.7: pydantic-core 2.33.2 had no compatible wheel and Rust build attempted to write outside workspace. Unpinned compatible packages were installed in .venv to execute the lab.

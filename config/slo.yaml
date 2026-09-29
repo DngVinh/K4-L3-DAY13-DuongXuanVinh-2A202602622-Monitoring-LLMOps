@@ -7,7 +7,14 @@ primary_slo:
     total_event: 'event == "request_received"'
   target_percent: 99.5
   error_budget_percent: 0.5
-  note: Học viên phải giải thích hoặc điều chỉnh ngưỡng bằng baseline của mình.
+  note: >-
+    A request is good only when response_sent exists and latency is at most 3000 ms.
+    The CP0 successful requests were about 155-249 ms; 3000 ms leaves room for
+    normal load but treats the 2500 ms retrieval practice delay plus overhead
+    as at risk. For 28 days, 99.5% gives a 0.5% bad-request budget:
+    floor(total_requests * 0.005), e.g. 50 bad requests per 10000 attempts.
+    Time-equivalent budget is 0.005 * 28 * 24 * 60 = 201.6 minutes, but the
+    operational SLI is request-based, so use request counts for burn calculations.
 guardrails:
   error_rate_pct_max: 2
   daily_cost_usd_max: 2.5
